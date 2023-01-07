@@ -1,8 +1,8 @@
-.container {
+.containerx {
   padding: 0 2rem;
 }
 
-.main {
+.mainx {
   min-height: 100vh;
   padding: 4rem 0;
   flex: 1;
@@ -12,7 +12,7 @@
   align-items: center;
 }
 
-.footer {
+.footerx {
   display: flex;
   flex: 1;
   padding: 2rem 0;
@@ -21,7 +21,7 @@
   align-items: center;
 }
 
-.footer a {
+.footerx a {
   display: flex;
   justify-content: center;
   align-items: center;
