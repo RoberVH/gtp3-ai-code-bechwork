@@ -17,7 +17,12 @@ const MyApp = () => {
   const handleExecute = async () => {
     if (!input) return
     setIsGenerating(true)
-    const prompt = radioOption.prompt + ' ' + input
+    let prompt;
+    if (radioOption.name==='Testcase') 
+      prompt = `Generate a testing function for this code that verifies the correct behavior
+        and output of the code. Include any necessary setup and teardown steps, as well as 
+        assertions to validate the output of the code ${input}` 
+      else  prompt = radioOption.prompt + ' ' + input
     const resp= await callGenerateEndpoint(prompt)
     setInput(resp)
     setIsGenerating(false)
@@ -25,11 +30,12 @@ const MyApp = () => {
 
   const options = [
     {idx:0, name: "Code", prompt:"Generate code to implement this functionality:"},
-    {idx:1, name: "Testcase",  prompt:"Generate a test code funtion for this code:"},
+    {idx:1, name: "Testcase",  prompt:"Generate a testing funtion for this code:"},
     {idx:2, name: "Documentation",  prompt:"Generate head comment style JDOC and inlilne comments here appropriate to this code:"},
     {idx:3, name: "Formating", prompt:"Format the following code:"},
     {idx:4, name: "Review", prompt:"Pinpoint any defect for the following code:"},
-    {idx:5, name: "Optimize",  prompt:"Optimize the the following code:"},
+    {idx:5, name: "Optimize",  prompt:"Optimize the following code:"},
+    {idx:6, name: "Explain",  prompt:"Explain what does the following code:"},
   ]   
   return (
    <div className="mt-8 h-screen" >
@@ -43,7 +49,7 @@ const MyApp = () => {
      {/* Options Panel Sidebar on the left */}
      <div className="flex flex-col">
         <div className="mx-2 border-2 border-blue-400 rounded-xl h-full bg-gray-100">
-        <label className="m-2 block font-bold ">Select SW Category</label>
+        <label className="m-2 block font-bold ">Select a Code Task</label>
         <div className="m-2 ml-4 w-[12em]">
           {
             options.map ( option =>(
@@ -69,14 +75,16 @@ const MyApp = () => {
             className="flex py-2 mt-2 w-[12em] cursor-pointer select-none appearance-none items-center justify-center space-x-2 rounded border  rounded-lg
             border-blue-700 bg-blue-700 px-3  text-sm font-medium text-white transition hover:border-blue-800 hover:bg-blue-800 focus:border-blue-300 
             focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:pointer-events-none disabled:opacity-75">
-            { isGenerating &&       <svg className="h-4 w-4 animate-spin" viewBox="3 3 18 18">
-              <path
-                className="fill-blue-800"
-                d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"></path>
-              <path
-                className="fill-blue-100"
-                d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"></path>
-            </svg>}
+            { isGenerating &&       
+              <svg className="h-4 w-4 animate-spin" viewBox="3 3 18 18">
+                <path
+                  className="fill-blue-800"
+                  d="M12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5ZM3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z"></path>
+                <path
+                  className="fill-blue-100"
+                  d="M16.9497 7.05015C14.2161 4.31648 9.78392 4.31648 7.05025 7.05015C6.65973 7.44067 6.02656 7.44067 5.63604 7.05015C5.24551 6.65962 5.24551 6.02646 5.63604 5.63593C9.15076 2.12121 14.8492 2.12121 18.364 5.63593C18.7545 6.02646 18.7545 6.65962 18.364 7.05015C17.9734 7.44067 17.3403 7.44067 16.9497 7.05015Z"></path>
+              </svg>
+            }
             {isGenerating ? <span> &nbsp; Loading... </span> : <span>Execute</span>}
           </button>
         </div>
@@ -84,7 +92,7 @@ const MyApp = () => {
 
     <div className="w-full ">
       <textarea
-        className={`${isGenerating ? 'text-stone-500' : ''} w-full h-[32rem]  p-4 border-2 border-blue-400 rounded-lg`}
+        className={`${isGenerating ? 'text-stone-500' : ''} w-full h-[34rem]  p-4 border-2 border-blue-400 rounded-lg`}
         value={input}
         disabled={isGenerating}
         placeholder={`
@@ -112,7 +120,7 @@ const MyApp = () => {
         <button 
           onClick = {()=>{navigator.clipboard.writeText(input); console.log(input)}}
           className= "ml-8  flex py-2 mt-2 w-[12em] cursor-pointer items-center justify-center rounded-lg bg-gray-700 px-2 text-sm  text-white transition hover:border-gray-800 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 disabled:pointer-events-none disabled:opacity-75">
-              Copy Clipboard
+              Copy to Clipboard
         </button>
         </div>
       </div>
